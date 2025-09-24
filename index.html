@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Notes App</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📒</text></svg>"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="notes.js"></script>
+    <script type="module" src="script.js"></script>
+    <script type="module" src="./script/realtime-validation.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <app-bar title="📒 Notes App" theme="primary"></app-bar>
+
+    <main class="container">
+      <note-form
+        title-placeholder="Enter note title..."
+        body-placeholder="Write your note content here..."
+        submit-text="Add New Note"
+        min-title-length="3"
+        min-body-length="5"
+      >
+      </note-form>
+
+      <section class="notes-list" id="notesList"></section>
+    </main>
+    <foot-bar copyright="Zenc Notes App" year="2025" theme="primary">
+    </foot-bar>
+  </body>
+</html>
