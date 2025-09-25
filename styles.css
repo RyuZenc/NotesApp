@@ -83,7 +83,8 @@ note-form textarea:focus {
 }
 
 note-form textarea {
-  min-height: 120px;
+  min-height: 200px;
+  min-width: 500px;
   resize: vertical;
 }
 

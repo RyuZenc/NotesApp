@@ -46,7 +46,9 @@ class NoteItem extends HTMLElement {
   }
 
   render() {
-    if (!this._note) return;
+    if (!this._note) {
+      return;
+    }
 
     const showDate = this.getAttribute("show-date") !== "false";
     const dateFormat = this.getAttribute("date-format") || "locale";
