@@ -1,4 +1,7 @@
-import { notesData } from "./notes.js";
+import { NotesAPI } from "./src/api/notes-api.js";
+import "./src/components/loading.js";
+import "./script/realtime-validation.js";
+import "./styles.css";
 
 class AppBar extends HTMLElement {
   static get observedAttributes() {
@@ -78,17 +81,29 @@ class NoteItem extends HTMLElement {
 customElements.define("note-item", NoteItem);
 
 // Render
-function renderNotes() {
+async function renderNotes() {
   const notesList = document.getElementById("notesList");
+  const loadingIndicator = document.createElement("loading-indicator");
+
   notesList.innerHTML = "";
-  notesData.forEach((note) => {
-    const noteItem = document.createElement("note-item");
-    noteItem.note = note;
-    notesList.appendChild(noteItem);
-  });
+  notesList.appendChild(loadingIndicator);
+
+  try {
+    const notes = await NotesAPI.getAllNotes();
+
+    notesList.innerHTML = "";
+    notes.forEach((note) => {
+      const noteItem = document.createElement("note-item");
+      noteItem.note = note;
+      notesList.appendChild(noteItem);
+    });
+  } catch (error) {
+    notesList.innerHTML = `<p class="error">Failed to load notes: ${error.message}</p>`;
+  }
 }
 
-renderNotes();
+// Call renderNotes when page loads
+document.addEventListener("DOMContentLoaded", renderNotes);
 
 class FootBar extends HTMLElement {
   static get observedAttributes() {

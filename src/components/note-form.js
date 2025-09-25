@@ -1,10 +1,17 @@
-import { notesData } from "../notes.js";
+import { NotesAPI } from "../api/notes-api.js";
 
-function renderNotes() {
+async function renderNotes() {
   const notesList = document.getElementById("notesList");
-  if (notesList) {
+  const loadingIndicator = document.createElement("loading-indicator");
+
+  notesList.innerHTML = "";
+  notesList.appendChild(loadingIndicator);
+
+  try {
+    const notes = await NotesAPI.getAllNotes();
+
     notesList.innerHTML = "";
-    notesData.forEach((note) => {
+    notes.forEach((note) => {
       const noteItem = document.createElement("note-item");
       noteItem.setAttribute("show-date", "true");
       noteItem.setAttribute("date-format", "locale");
@@ -12,6 +19,8 @@ function renderNotes() {
       noteItem.note = note;
       notesList.appendChild(noteItem);
     });
+  } catch (error) {
+    notesList.innerHTML = `<p class="error">Failed to load notes: ${error.message}</p>`;
   }
 }
 
@@ -130,26 +139,30 @@ class NoteForm extends HTMLElement {
     titleInput.addEventListener("input", validate);
     bodyInput.addEventListener("input", validate);
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const title = titleInput.value.trim();
       const body = bodyInput.value.trim();
 
       if (title.length >= minTitleLength && body.length >= minBodyLength) {
-        const newNote = {
-          id: `notes-${Date.now()}`,
-          title,
-          body,
-          createdAt: new Date().toISOString(),
-          archived: false,
-        };
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Adding...";
 
-        notesData.push(newNote);
-        renderNotes();
-        form.reset();
-        validate();
+        try {
+          await NotesAPI.createNote({ title, body });
 
-        alert(`Note "${title}" added successfully!`);
+          await renderNotes();
+          form.reset();
+          validate();
+
+          alert(`Note "${title}" added successfully!`);
+        } catch (error) {
+          alert(`Failed to add note: ${error.message}`);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent =
+            this.getAttribute("submit-text") || "Add Note";
+        }
       }
     });
 
