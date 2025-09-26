@@ -1,22 +1,40 @@
-export class LoadingIndicator extends HTMLElement {
+class LoadingIndicator extends HTMLElement {
   connectedCallback() {
     this.render();
   }
 
   render() {
     this.innerHTML = `
-      <div class="loading-container">
-        <div class="spinner"></div>
-        <p>Loading...</p>
+      <div class="loading-overlay">
+        <div class="loading-container">
+          <div class="spinner"></div>
+          <p>Loading...</p>
+        </div>
       </div>
       
       <style>
+        .loading-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(250, 218, 122, 0.9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        }
+        
         .loading-container {
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           padding: 2rem;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
         
         .spinner {
@@ -36,6 +54,7 @@ export class LoadingIndicator extends HTMLElement {
         p {
           margin-top: 1rem;
           color: #666;
+          font-weight: bold;
         }
       </style>
     `;

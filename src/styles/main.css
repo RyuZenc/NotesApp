@@ -1,3 +1,4 @@
+/* Generic list styles - currently unused but kept for future use */
 .list {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -29,10 +30,6 @@ app-bar {
   padding: 1rem;
   font-size: 1.5rem;
   text-align: center;
-}
-
-app-bar.app-bar-primary {
-  background: #81bfda;
 }
 
 app-bar.app-bar-secondary {
@@ -135,6 +132,10 @@ note-item {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border: #c0bca1 solid 1px;
   position: relative;
+  width: 250px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 note-item p {
@@ -142,7 +143,7 @@ note-item p {
 }
 
 note-item small {
-  margin-top: auto;
+  margin-top: 0.5rem;
   color: #666;
   font-size: 0.8rem;
 }
@@ -157,6 +158,17 @@ note-item .note-header {
 note-item .note-header h3 {
   margin: 0;
   flex: 1;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+/* Button */
+note-item .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.1rem;
 }
 
 note-item .delete-btn {
@@ -167,7 +179,6 @@ note-item .delete-btn {
   cursor: pointer;
   font-size: 0.9rem;
   transition: background 0.2s;
-  margin-left: 0.5rem;
   color: white;
 }
 
@@ -180,26 +191,31 @@ note-item .delete-btn:disabled {
   cursor: not-allowed;
 }
 
+note-item .archive-btn {
+  background: #a8f0ff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+  color: white;
+}
+
+note-item .archive-btn:hover {
+  background: #93d1de;
+}
+
+note-item .archive-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
 .notes-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 250px); /* fixed width cards */
-  justify-content: center; /* center the grid */
+  grid-template-columns: repeat(auto-fill, 250px);
+  justify-content: center;
   gap: 1rem;
-}
-
-note-item {
-  width: 250px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
-}
-
-note-item .note-header h3 {
-  margin: 0;
-  flex: 1;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  white-space: normal;
 }
 
 @media (min-width: 900px) {
@@ -216,10 +232,6 @@ footer {
   font-size: 0.9rem;
 }
 
-footer.footer-primary {
-  background: #81bfda;
-}
-
 footer.footer-secondary {
   background: #6c757d;
 }
@@ -228,7 +240,66 @@ footer.footer-success {
   background: #28a745;
 }
 
-#title,
-#body {
+view-toggle {
+  display: block;
+  margin: 1.5rem 0;
+}
+
+view-toggle .view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+view-toggle .toggle-btn {
+  padding: 0.8rem 1.5rem;
+  border: 2px solid #81bfda;
+  background: white;
+  color: #81bfda;
+  border-radius: 25px;
+  cursor: pointer;
   font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+view-toggle .toggle-btn:hover {
+  background: #f0f8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(129, 191, 218, 0.3);
+}
+
+view-toggle .toggle-btn.active {
+  background: #81bfda;
+  color: white;
+  box-shadow: 0 2px 6px rgba(129, 191, 218, 0.4);
+}
+
+view-toggle .toggle-btn.active:hover {
+  background: #6ea8c4;
+  transform: translateY(-1px);
+}
+
+.empty-message {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+  margin: 1rem 0;
+}
+
+.error {
+  text-align: center;
+  color: #dc3545;
+  font-weight: bold;
+  padding: 1rem;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  margin: 1rem 0;
 }

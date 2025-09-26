@@ -5,6 +5,7 @@ import "./components/note-item.js";
 import "./components/note-form.js";
 import "./components/foot-bar.js";
 import "./components/loading.js";
+import "./components/view-toggle.js";
 
 import "./styles/main.css";
 
