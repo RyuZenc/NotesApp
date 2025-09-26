@@ -1,4 +1,3 @@
-/* Generic list styles - currently unused but kept for future use */
 .list {
   display: grid;
   grid-template-columns: 1fr 1fr;
