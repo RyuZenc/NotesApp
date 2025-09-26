@@ -1,4 +1,5 @@
 import { NotesAPI } from "../api/notes-api.js";
+import Swal from "sweetalert2";
 
 export async function renderNotes() {
   const notesList = document.getElementById("notesList");
@@ -32,6 +33,19 @@ export async function renderNotes() {
     document.body.removeChild(loadingIndicator);
 
     notesList.innerHTML = `<p class="error">Failed to load notes: ${error.message}</p>`;
+
+    Swal.fire({
+      icon: "error",
+      title: "Failed to Load Notes",
+      text: error.message,
+      confirmButtonText: "Retry",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
   }
 }
 
@@ -67,5 +81,18 @@ export async function renderArchivedNotes() {
     document.body.removeChild(loadingIndicator);
 
     notesList.innerHTML = `<p class="error">Failed to load archived notes: ${error.message}</p>`;
+
+    Swal.fire({
+      icon: "error",
+      title: "Failed to Load Archived Notes",
+      text: error.message,
+      confirmButtonText: "Retry",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
   }
 }

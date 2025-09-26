@@ -1,5 +1,6 @@
 import { NotesAPI } from "../api/notes-api.js";
 import { renderNotes, renderArchivedNotes } from "../utils/render-notes.js";
+import Swal from "sweetalert2";
 
 class NoteItem extends HTMLElement {
   static get observedAttributes() {
@@ -30,7 +31,17 @@ class NoteItem extends HTMLElement {
       return;
     }
 
-    if (!confirm(`Are you sure you want to delete "${this._note.title}"?`)) {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: `You want to delete "${this._note.title}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
@@ -58,11 +69,24 @@ class NoteItem extends HTMLElement {
         await renderNotes();
       }
 
-      alert(`Note "${this._note.title}" deleted successfully!`);
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: `Note "${this._note.title}" has been deleted.`,
+        timer: 2000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     } catch (error) {
       loadingIndicator.hide();
       document.body.removeChild(loadingIndicator);
-      alert(`Failed to delete note: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "Delete Failed",
+        text: error.message,
+        confirmButtonText: "OK",
+      });
       deleteBtn.disabled = false;
       deleteBtn.textContent = originalText;
     }
@@ -74,11 +98,25 @@ class NoteItem extends HTMLElement {
     }
 
     const action = this._note.archived ? "unarchive" : "archive";
-    const confirmMessage = this._note.archived
-      ? `Are you sure you want to unarchive "${this._note.title}"?`
-      : `Are you sure you want to archive "${this._note.title}"?`;
+    const title = this._note.archived ? "Unarchive Note?" : "Archive Note?";
+    const text = this._note.archived
+      ? `You want to unarchive "${this._note.title}"?`
+      : `You want to archive "${this._note.title}"?`;
+    const confirmButtonText = this._note.archived
+      ? "Yes, unarchive it!"
+      : "Yes, archive it!";
 
-    if (!confirm(confirmMessage)) {
+    const result = await Swal.fire({
+      title: title,
+      text: text,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#81bfda",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: confirmButtonText,
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
@@ -100,19 +138,40 @@ class NoteItem extends HTMLElement {
         await NotesAPI.unarchiveNote(this._note.id);
         loadingIndicator.hide();
         document.body.removeChild(loadingIndicator);
-        alert(`Note "${this._note.title}" unarchived successfully!`);
+        Swal.fire({
+          icon: "success",
+          title: "Unarchived!",
+          text: `Note "${this._note.title}" has been unarchived.`,
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
         await renderArchivedNotes(); // Update archived view
       } else {
         await NotesAPI.archiveNote(this._note.id);
         loadingIndicator.hide();
         document.body.removeChild(loadingIndicator);
-        alert(`Note "${this._note.title}" archived successfully!`);
+        Swal.fire({
+          icon: "success",
+          title: "Archived!",
+          text: `Note "${this._note.title}" has been archived.`,
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
         await renderNotes(); // Update active view
       }
     } catch (error) {
       loadingIndicator.hide();
       document.body.removeChild(loadingIndicator);
-      alert(`Failed to update archive status: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "Archive Failed",
+        text: error.message,
+        confirmButtonText: "OK",
+      });
       archiveBtn.disabled = false;
       archiveBtn.textContent = originalText;
     }

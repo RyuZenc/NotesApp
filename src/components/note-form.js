@@ -1,5 +1,6 @@
 import { NotesAPI } from "../api/notes-api.js";
 import { renderNotes } from "../utils/render-notes.js";
+import Swal from "sweetalert2";
 
 class NoteForm extends HTMLElement {
   static get observedAttributes() {
@@ -140,11 +141,24 @@ class NoteForm extends HTMLElement {
           form.reset();
           validate();
 
-          alert(`Note "${title}" added successfully!`);
+          Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: `Note "${title}" added successfully!`,
+            timer: 2000,
+            showConfirmButton: false,
+            toast: true,
+            position: "top-end",
+          });
         } catch (error) {
           loadingIndicator.hide();
           document.body.removeChild(loadingIndicator);
-          alert(`Failed to add note: ${error.message}`);
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Add Note",
+            text: error.message,
+            confirmButtonText: "Try Again",
+          });
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent =
