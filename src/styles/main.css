@@ -1,4 +1,3 @@
-/* Generic list styles - currently unused but kept for future use */
 .list {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -10,26 +9,91 @@
   border: 1px solid #333;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   height: 100%;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  font-family: "Roboto Mono", monospace;
-  background: #fada7a;
+  font-family: 'Roboto Mono', monospace;
+  background: linear-gradient(135deg, #fada7a 0%, #f7cd5a 50%, #fada7a 100%);
+  background-size: 200% 200%;
+  animation:
+    fadeIn 0.8s ease-in-out,
+    gradientShift 10s ease infinite;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 app-bar {
   display: block;
   background: #81bfda;
   color: white;
-  padding: 1rem;
-  font-size: 1.5rem;
+  padding: 0rem 1rem;
+  font-size: 1rem;
   text-align: center;
+  animation: slideInDown 0.6s ease-out;
+  transition: background 0.3s ease;
+}
+
+app-bar:hover {
+  background: #6ea8c4;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 app-bar.app-bar-secondary {
@@ -45,6 +109,18 @@ app-bar.app-bar-success {
   max-width: 900px;
   margin: auto;
   flex: 1;
+  animation: slideInContainer 0.8s ease-out;
+}
+
+@keyframes slideInContainer {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 note-form {
@@ -55,6 +131,26 @@ note-form {
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border: #c0bca1 solid 1px;
+  animation: slideInUp 0.6s ease-out;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+note-form:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 note-form form {
@@ -70,18 +166,27 @@ note-form textarea {
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
-  transition: border 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  position: relative;
 }
 
 note-form input:focus,
 note-form textarea:focus {
-  border-color: #c0bca1;
-  box-shadow: 0 0 4px rgba(192, 188, 161, 0.6);
+  border-color: #81bfda;
+  box-shadow: 0 0 12px rgba(129, 191, 218, 0.3);
+  transform: translateY(-2px);
+}
+
+note-form input:hover,
+note-form textarea:hover {
+  border-color: #b0b0b0;
+  transform: translateY(-1px);
 }
 
 note-form textarea {
   min-height: 200px;
-  min-width: 500px;
+  width: 100%;
   resize: vertical;
 }
 
@@ -95,12 +200,41 @@ note-form button {
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 note-form button:hover {
   background: #b1f0f7;
   color: #898989;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(129, 191, 218, 0.4);
+}
+
+note-form button:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+note-form button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+note-form button:active::before {
+  width: 300px;
+  height: 300px;
 }
 
 .error-message {
@@ -132,10 +266,43 @@ note-item {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border: #c0bca1 solid 1px;
   position: relative;
-  width: 250px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  white-space: normal;
+  opacity: 0;
+  animation: slideInAndFade 0.6s ease-out forwards;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+note-item:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  border-color: #81bfda;
+}
+
+note-item.removing {
+  animation: slideOutAndFade 0.4s ease-in forwards;
+}
+
+@keyframes slideInAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOutAndFade {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
 }
 
 note-item p {
@@ -178,12 +345,19 @@ note-item .delete-btn {
   padding: 0.3rem 0.5rem;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
   color: white;
+  transform: rotate(0deg);
 }
 
 note-item .delete-btn:hover {
   background: #ff5252;
+  transform: rotate(10deg) scale(1.1);
+  box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4);
+}
+
+note-item .delete-btn:active {
+  transform: rotate(0deg) scale(0.95);
 }
 
 note-item .delete-btn:disabled {
@@ -198,12 +372,18 @@ note-item .archive-btn {
   padding: 0.3rem 0.5rem;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
   color: white;
 }
 
 note-item .archive-btn:hover {
   background: #93d1de;
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 3px 10px rgba(168, 240, 255, 0.4);
+}
+
+note-item .archive-btn:active {
+  transform: scale(0.95);
 }
 
 note-item .archive-btn:disabled {
@@ -213,14 +393,20 @@ note-item .archive-btn:disabled {
 
 .notes-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 250px);
-  justify-content: center;
   gap: 1rem;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  animation: fadeInUp 0.8s ease-out;
 }
 
-@media (min-width: 900px) {
-  .notes-list {
-    grid-template-columns: repeat(3, 1fr);
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -230,6 +416,25 @@ footer {
   padding: 0.5rem;
   text-align: center;
   font-size: 0.9rem;
+  animation: slideInUp 0.6s ease-out;
+  transition: background 0.3s ease;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+footer:hover {
+  background: #6ea8c4;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 footer.footer-secondary {
@@ -291,6 +496,22 @@ view-toggle .toggle-btn.active:hover {
   border-radius: 8px;
   border: 2px dashed #dee2e6;
   margin: 1rem 0;
+  animation: fadeInBounce 0.8s ease-out;
+}
+
+@keyframes fadeInBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .error {
@@ -302,4 +523,56 @@ view-toggle .toggle-btn.active:hover {
   border: 1px solid #f5c6cb;
   border-radius: 8px;
   margin: 1rem 0;
+  animation: shakeIn 0.6s ease-out;
+}
+
+@keyframes shakeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  25% {
+    opacity: 0.5;
+    transform: translateX(5px);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateX(-3px);
+  }
+  75% {
+    opacity: 0.9;
+    transform: translateX(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+body.swal2-shown {
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+}
+
+body.swal2-height-auto {
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+@media (min-width: 900px) {
+  .notes-list {
+    display: grid;
+    gap: 1rem;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: minmax(180px, auto);
+    min-width: calc(3 * 180px + 2 * 1rem);
+  }
+
+  note-item small {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    color: #666;
+    font-size: 0.8rem;
+  }
 }

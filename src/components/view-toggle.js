@@ -1,9 +1,9 @@
-import { renderNotes, renderArchivedNotes } from "../utils/render-notes.js";
+import { renderNotes, renderArchivedNotes } from '../utils/render-notes.js';
 
 class ViewToggle extends HTMLElement {
   constructor() {
     super();
-    this.currentView = "active"; // "active" or "archived"
+    this.currentView = 'active';
   }
 
   connectedCallback() {
@@ -13,13 +13,13 @@ class ViewToggle extends HTMLElement {
 
   setupEventListeners() {
     if (!this.clickHandler) {
-      this.clickHandler = async (e) => {
-        if (e.target.classList.contains("toggle-btn")) {
+      this.clickHandler = async e => {
+        if (e.target.classList.contains('toggle-btn')) {
           const { view } = e.target.dataset;
           await this.switchView(view);
         }
       };
-      this.addEventListener("click", this.clickHandler);
+      this.addEventListener('click', this.clickHandler);
     }
   }
 
@@ -31,8 +31,7 @@ class ViewToggle extends HTMLElement {
     this.currentView = view;
     this.render();
 
-    // Update the notes list
-    if (view === "active") {
+    if (view === 'active') {
       await renderNotes();
     } else {
       await renderArchivedNotes();
@@ -43,13 +42,13 @@ class ViewToggle extends HTMLElement {
     this.innerHTML = `
       <div class="view-toggle">
         <button 
-          class="toggle-btn ${this.currentView === "active" ? "active" : ""}" 
+          class="toggle-btn ${this.currentView === 'active' ? 'active' : ''}" 
           data-view="active"
         >
           📝 Active Notes
         </button>
         <button 
-          class="toggle-btn ${this.currentView === "archived" ? "active" : ""}" 
+          class="toggle-btn ${this.currentView === 'archived' ? 'active' : ''}" 
           data-view="archived"
         >
           📦 Archived Notes
@@ -59,4 +58,4 @@ class ViewToggle extends HTMLElement {
   }
 }
 
-customElements.define("view-toggle", ViewToggle);
+customElements.define('view-toggle', ViewToggle);

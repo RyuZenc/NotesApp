@@ -1,13 +1,14 @@
-import { NotesAPI } from "../api/notes-api.js";
+import { NotesAPI } from '../api/notes-api.js';
+import Swal from 'sweetalert2';
 
 export async function renderNotes() {
-  const notesList = document.getElementById("notesList");
-  const loadingIndicator = document.createElement("loading-indicator");
+  const notesList = document.getElementById('notesList');
+  const loadingIndicator = document.createElement('loading-indicator');
 
   document.body.appendChild(loadingIndicator);
   loadingIndicator.show();
 
-  notesList.innerHTML = "";
+  notesList.innerHTML = '';
 
   try {
     const notes = await NotesAPI.getAllNotes();
@@ -19,12 +20,15 @@ export async function renderNotes() {
       return;
     }
 
-    notes.forEach((note) => {
-      const noteItem = document.createElement("note-item");
-      noteItem.setAttribute("show-date", "true");
-      noteItem.setAttribute("date-format", "locale");
-      noteItem.setAttribute("max-content-length", "200");
+    notes.forEach((note, index) => {
+      const noteItem = document.createElement('note-item');
+      noteItem.setAttribute('show-date', 'true');
+      noteItem.setAttribute('date-format', 'locale');
+      noteItem.setAttribute('max-content-length', '200');
       noteItem.note = note;
+
+      noteItem.style.animationDelay = `${index * 0.1}s`;
+
       notesList.appendChild(noteItem);
     });
   } catch (error) {
@@ -32,17 +36,30 @@ export async function renderNotes() {
     document.body.removeChild(loadingIndicator);
 
     notesList.innerHTML = `<p class="error">Failed to load notes: ${error.message}</p>`;
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Failed to Load Notes',
+      text: error.message,
+      confirmButtonText: 'Retry',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+    }).then(result => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
   }
 }
 
 export async function renderArchivedNotes() {
-  const notesList = document.getElementById("notesList");
-  const loadingIndicator = document.createElement("loading-indicator");
+  const notesList = document.getElementById('notesList');
+  const loadingIndicator = document.createElement('loading-indicator');
 
   document.body.appendChild(loadingIndicator);
   loadingIndicator.show();
 
-  notesList.innerHTML = "";
+  notesList.innerHTML = '';
 
   try {
     const archivedNotes = await NotesAPI.getArchivedNotes();
@@ -54,12 +71,15 @@ export async function renderArchivedNotes() {
       return;
     }
 
-    archivedNotes.forEach((note) => {
-      const noteItem = document.createElement("note-item");
-      noteItem.setAttribute("show-date", "true");
-      noteItem.setAttribute("date-format", "locale");
-      noteItem.setAttribute("max-content-length", "200");
+    archivedNotes.forEach((note, index) => {
+      const noteItem = document.createElement('note-item');
+      noteItem.setAttribute('show-date', 'true');
+      noteItem.setAttribute('date-format', 'locale');
+      noteItem.setAttribute('max-content-length', '200');
       noteItem.note = note;
+
+      noteItem.style.animationDelay = `${index * 0.1}s`;
+
       notesList.appendChild(noteItem);
     });
   } catch (error) {
@@ -67,5 +87,18 @@ export async function renderArchivedNotes() {
     document.body.removeChild(loadingIndicator);
 
     notesList.innerHTML = `<p class="error">Failed to load archived notes: ${error.message}</p>`;
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Failed to Load Archived Notes',
+      text: error.message,
+      confirmButtonText: 'Retry',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+    }).then(result => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
   }
 }
