@@ -27,7 +27,6 @@ export async function renderNotes() {
       noteItem.setAttribute('max-content-length', '200');
       noteItem.note = note;
 
-      // Add staggered animation delay
       noteItem.style.animationDelay = `${index * 0.1}s`;
 
       notesList.appendChild(noteItem);
@@ -79,7 +78,6 @@ export async function renderArchivedNotes() {
       noteItem.setAttribute('max-content-length', '200');
       noteItem.note = note;
 
-      // Add staggered animation delay
       noteItem.style.animationDelay = `${index * 0.1}s`;
 
       notesList.appendChild(noteItem);
