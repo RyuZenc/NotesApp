@@ -1,6 +1,6 @@
 class FootBar extends HTMLElement {
   static get observedAttributes() {
-    return ["year", "copyright", "theme"];
+    return ['year', 'copyright', 'theme'];
   }
 
   connectedCallback() {
@@ -12,9 +12,9 @@ class FootBar extends HTMLElement {
   }
 
   render() {
-    const year = this.getAttribute("year");
-    const copyright = this.getAttribute("copyright");
-    const theme = this.getAttribute("theme");
+    const year = this.getAttribute('year');
+    const copyright = this.getAttribute('copyright');
+    const theme = this.getAttribute('theme');
 
     this.innerHTML = `
       <footer class="footer-${theme}">
@@ -23,4 +23,4 @@ class FootBar extends HTMLElement {
     `;
   }
 }
-customElements.define("foot-bar", FootBar);
+customElements.define('foot-bar', FootBar);

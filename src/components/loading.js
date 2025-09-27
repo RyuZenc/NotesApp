@@ -24,6 +24,7 @@ class LoadingIndicator extends HTMLElement {
           align-items: center;
           justify-content: center;
           z-index: 9999;
+          animation: fadeInOverlay 0.3s ease-out;
         }
         
         .loading-container {
@@ -35,6 +36,8 @@ class LoadingIndicator extends HTMLElement {
           background: white;
           border-radius: 12px;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+          animation: bounceIn 0.6s ease-out;
+          transform: scale(1);
         }
         
         .spinner {
@@ -43,12 +46,45 @@ class LoadingIndicator extends HTMLElement {
           border: 4px solid #f3f3f3;
           border-top: 4px solid #81bfda;
           border-radius: 50%;
-          animation: spin 1s linear infinite;
+          animation: spin 1s linear infinite, pulse 2s ease-in-out infinite alternate;
         }
         
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          100% { transform: scale(1.1); }
+        }
+        
+        @keyframes fadeInOverlay {
+          from {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+          }
+          to {
+            opacity: 1;
+            backdrop-filter: blur(5px);
+          }
+        }
+        
+        @keyframes bounceIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.3) translateY(-50px);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.05) translateY(0);
+          }
+          70% {
+            transform: scale(0.95);
+          }
+          100% {
+            transform: scale(1);
+          }
         }
         
         p {
@@ -61,12 +97,12 @@ class LoadingIndicator extends HTMLElement {
   }
 
   show() {
-    this.style.display = "block";
+    this.style.display = 'block';
   }
 
   hide() {
-    this.style.display = "none";
+    this.style.display = 'none';
   }
 }
 
-customElements.define("loading-indicator", LoadingIndicator);
+customElements.define('loading-indicator', LoadingIndicator);

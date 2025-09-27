@@ -1,10 +1,10 @@
-import { NotesAPI } from "../api/notes-api.js";
-import { renderNotes, renderArchivedNotes } from "../utils/render-notes.js";
-import Swal from "sweetalert2";
+import { NotesAPI } from '../api/notes-api.js';
+import { renderNotes, renderArchivedNotes } from '../utils/render-notes.js';
+import Swal from 'sweetalert2';
 
 class NoteItem extends HTMLElement {
   static get observedAttributes() {
-    return ["show-date", "date-format"];
+    return ['show-date', 'date-format'];
   }
 
   set note(note) {
@@ -32,29 +32,29 @@ class NoteItem extends HTMLElement {
     }
 
     const result = await Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: `You want to delete "${this._note.title}"?`,
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
     });
 
     if (!result.isConfirmed) {
       return;
     }
 
-    const deleteBtn = this.querySelector(".delete-btn");
+    const deleteBtn = this.querySelector('.delete-btn');
     const originalText = deleteBtn.textContent;
 
-    const loadingIndicator = document.createElement("loading-indicator");
+    const loadingIndicator = document.createElement('loading-indicator');
     document.body.appendChild(loadingIndicator);
     loadingIndicator.show();
 
     try {
       deleteBtn.disabled = true;
-      deleteBtn.textContent = "Deleting...";
+      deleteBtn.textContent = 'Deleting...';
 
       await NotesAPI.deleteNote(this._note.id);
 
@@ -68,22 +68,22 @@ class NoteItem extends HTMLElement {
       }
 
       Swal.fire({
-        icon: "success",
-        title: "Deleted!",
+        icon: 'success',
+        title: 'Deleted!',
         text: `Note "${this._note.title}" has been deleted.`,
         timer: 2000,
         showConfirmButton: false,
         toast: true,
-        position: "top-end",
+        position: 'top-end',
       });
     } catch (error) {
       loadingIndicator.hide();
       document.body.removeChild(loadingIndicator);
       Swal.fire({
-        icon: "error",
-        title: "Delete Failed",
+        icon: 'error',
+        title: 'Delete Failed',
         text: error.message,
-        confirmButtonText: "OK",
+        confirmButtonText: 'OK',
       });
       deleteBtn.disabled = false;
       deleteBtn.textContent = originalText;
@@ -95,22 +95,22 @@ class NoteItem extends HTMLElement {
       return;
     }
 
-    const action = this._note.archived ? "unarchive" : "archive";
-    const title = this._note.archived ? "Unarchive Note?" : "Archive Note?";
+    const action = this._note.archived ? 'unarchive' : 'archive';
+    const title = this._note.archived ? 'Unarchive Note?' : 'Archive Note?';
     const text = this._note.archived
       ? `You want to unarchive "${this._note.title}"?`
       : `You want to archive "${this._note.title}"?`;
     const confirmButtonText = this._note.archived
-      ? "Yes, unarchive it!"
-      : "Yes, archive it!";
+      ? 'Yes, unarchive it!'
+      : 'Yes, archive it!';
 
     const result = await Swal.fire({
       title: title,
       text: text,
-      icon: "question",
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: "#81bfda",
-      cancelButtonColor: "#6c757d",
+      confirmButtonColor: '#81bfda',
+      cancelButtonColor: '#6c757d',
       confirmButtonText: confirmButtonText,
     });
 
@@ -118,31 +118,31 @@ class NoteItem extends HTMLElement {
       return;
     }
 
-    const archiveBtn = this.querySelector(".archive-btn");
+    const archiveBtn = this.querySelector('.archive-btn');
     const originalText = archiveBtn.textContent;
 
-    const loadingIndicator = document.createElement("loading-indicator");
+    const loadingIndicator = document.createElement('loading-indicator');
     document.body.appendChild(loadingIndicator);
     loadingIndicator.show();
 
     try {
       archiveBtn.disabled = true;
       archiveBtn.textContent = this._note.archived
-        ? "Unarchiving..."
-        : "Archiving...";
+        ? 'Unarchiving...'
+        : 'Archiving...';
 
       if (this._note.archived) {
         await NotesAPI.unarchiveNote(this._note.id);
         loadingIndicator.hide();
         document.body.removeChild(loadingIndicator);
         Swal.fire({
-          icon: "success",
-          title: "Unarchived!",
+          icon: 'success',
+          title: 'Unarchived!',
           text: `Note "${this._note.title}" has been unarchived.`,
           timer: 2000,
           showConfirmButton: false,
           toast: true,
-          position: "top-end",
+          position: 'top-end',
         });
         await renderArchivedNotes();
       } else {
@@ -150,13 +150,13 @@ class NoteItem extends HTMLElement {
         loadingIndicator.hide();
         document.body.removeChild(loadingIndicator);
         Swal.fire({
-          icon: "success",
-          title: "Archived!",
+          icon: 'success',
+          title: 'Archived!',
           text: `Note "${this._note.title}" has been archived.`,
           timer: 2000,
           showConfirmButton: false,
           toast: true,
-          position: "top-end",
+          position: 'top-end',
         });
         await renderNotes();
       }
@@ -164,10 +164,10 @@ class NoteItem extends HTMLElement {
       loadingIndicator.hide();
       document.body.removeChild(loadingIndicator);
       Swal.fire({
-        icon: "error",
-        title: "Archive Failed",
+        icon: 'error',
+        title: 'Archive Failed',
         text: error.message,
-        confirmButtonText: "OK",
+        confirmButtonText: 'OK',
       });
       archiveBtn.disabled = false;
       archiveBtn.textContent = originalText;
@@ -176,14 +176,14 @@ class NoteItem extends HTMLElement {
 
   setupEventListeners() {
     if (!this.clickHandler) {
-      this.clickHandler = (e) => {
-        if (e.target.classList.contains("delete-btn")) {
+      this.clickHandler = e => {
+        if (e.target.classList.contains('delete-btn')) {
           this.deleteNote();
-        } else if (e.target.classList.contains("archive-btn")) {
+        } else if (e.target.classList.contains('archive-btn')) {
           this.toggleArchive();
         }
       };
-      this.addEventListener("click", this.clickHandler);
+      this.addEventListener('click', this.clickHandler);
     }
   }
 
@@ -192,22 +192,22 @@ class NoteItem extends HTMLElement {
       return;
     }
 
-    const showDate = this.getAttribute("show-date") !== "false";
-    const dateFormat = this.getAttribute("date-format") || "locale";
+    const showDate = this.getAttribute('show-date') !== 'false';
+    const dateFormat = this.getAttribute('date-format') || 'locale';
 
-    let dateString = "";
+    let dateString = '';
     if (showDate) {
       const date = new Date(this._note.createdAt);
       dateString =
-        dateFormat === "short"
+        dateFormat === 'short'
           ? date.toLocaleDateString()
           : date.toLocaleString();
     }
 
-    const archiveIcon = this._note.archived ? "📤" : "📥";
+    const archiveIcon = this._note.archived ? '📤' : '📥';
     const archiveTitle = this._note.archived
-      ? "Unarchive this note"
-      : "Archive this note";
+      ? 'Unarchive this note'
+      : 'Archive this note';
 
     this.innerHTML = `
       <div class="note-header">
@@ -218,9 +218,9 @@ class NoteItem extends HTMLElement {
         </div>
       </div>
       <p>${this._note.body}</p>
-      ${showDate ? `<small>${dateString}</small>` : ""}
+      ${showDate ? `<small>${dateString}</small>` : ''}
     `;
   }
 }
 
-customElements.define("note-item", NoteItem);
+customElements.define('note-item', NoteItem);
