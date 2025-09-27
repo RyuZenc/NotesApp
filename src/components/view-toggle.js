@@ -3,7 +3,7 @@ import { renderNotes, renderArchivedNotes } from "../utils/render-notes.js";
 class ViewToggle extends HTMLElement {
   constructor() {
     super();
-    this.currentView = "active"; // "active" or "archived"
+    this.currentView = "active";
   }
 
   connectedCallback() {
@@ -31,7 +31,6 @@ class ViewToggle extends HTMLElement {
     this.currentView = view;
     this.render();
 
-    // Update the notes list
     if (view === "active") {
       await renderNotes();
     } else {

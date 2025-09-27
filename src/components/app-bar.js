@@ -12,7 +12,6 @@ class AppBar extends HTMLElement {
   }
 
   render() {
-    // read directly from HTML
     const title = this.getAttribute("title");
     const theme = this.getAttribute("theme");
 

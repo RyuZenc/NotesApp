@@ -123,7 +123,6 @@ class NoteForm extends HTMLElement {
       const body = bodyInput.value.trim();
 
       if (title.length >= minTitleLength && body.length >= minBodyLength) {
-        // Create and show loading indicator
         const loadingIndicator = document.createElement("loading-indicator");
         document.body.appendChild(loadingIndicator);
         loadingIndicator.show();

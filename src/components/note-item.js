@@ -48,7 +48,6 @@ class NoteItem extends HTMLElement {
     const deleteBtn = this.querySelector(".delete-btn");
     const originalText = deleteBtn.textContent;
 
-    // Create and show loading indicator
     const loadingIndicator = document.createElement("loading-indicator");
     document.body.appendChild(loadingIndicator);
     loadingIndicator.show();
@@ -62,7 +61,6 @@ class NoteItem extends HTMLElement {
       loadingIndicator.hide();
       document.body.removeChild(loadingIndicator);
 
-      // Re-render current view (could be active or archived)
       if (this._note.archived) {
         await renderArchivedNotes();
       } else {
@@ -123,7 +121,6 @@ class NoteItem extends HTMLElement {
     const archiveBtn = this.querySelector(".archive-btn");
     const originalText = archiveBtn.textContent;
 
-    // Create and show loading indicator
     const loadingIndicator = document.createElement("loading-indicator");
     document.body.appendChild(loadingIndicator);
     loadingIndicator.show();
@@ -147,7 +144,7 @@ class NoteItem extends HTMLElement {
           toast: true,
           position: "top-end",
         });
-        await renderArchivedNotes(); // Update archived view
+        await renderArchivedNotes();
       } else {
         await NotesAPI.archiveNote(this._note.id);
         loadingIndicator.hide();
@@ -161,7 +158,7 @@ class NoteItem extends HTMLElement {
           toast: true,
           position: "top-end",
         });
-        await renderNotes(); // Update active view
+        await renderNotes();
       }
     } catch (error) {
       loadingIndicator.hide();
@@ -207,7 +204,6 @@ class NoteItem extends HTMLElement {
           : date.toLocaleString();
     }
 
-    // Button icon changes depending on archive status
     const archiveIcon = this._note.archived ? "📤" : "📥";
     const archiveTitle = this._note.archived
       ? "Unarchive this note"

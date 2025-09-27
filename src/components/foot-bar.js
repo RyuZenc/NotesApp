@@ -12,7 +12,6 @@ class FootBar extends HTMLElement {
   }
 
   render() {
-    // read directly from HTML
     const year = this.getAttribute("year");
     const copyright = this.getAttribute("copyright");
     const theme = this.getAttribute("theme");
